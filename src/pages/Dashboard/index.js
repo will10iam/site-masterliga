@@ -2,8 +2,8 @@ import { useEffect, useState } from "react"
 import Sidebar from "../../components/Sidebar";
 import Title from '../../components/Title'
 import './index.css'
-import { FiEdit2, FiMessageSquare, FiPlus, FiSearch } from "react-icons/fi";
-import { TbPlayFootball } from "react-icons/tb";
+import { FiEdit2, FiPlus, FiSearch } from "react-icons/fi";
+import { SiPremierleague } from "react-icons/si";
 import { Link } from "react-router-dom";
 import { db } from "../../services/firebaseConection";
 import { collection, orderBy, limit, getDocs, startAfter, query } from "firebase/firestore";
@@ -12,11 +12,11 @@ import Modal from "../../components/Modal";
 
 
 
-const listRef = collection(db, "chamados");
+const listRef = collection(db, "masterligas");
 
 export default function Dashboard() {
 
-    const [chamados, setChamados] = useState([]);
+    const [masterligas, setMasterligas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isEmpty, setIsEmpty] = useState(false);
     const [lastDocs, setLastDocs] = useState();
@@ -26,17 +26,17 @@ export default function Dashboard() {
     const [detail, setDetail] = useState()
 
     useEffect(() => {
-        async function loadChamados() {
+        async function loadmasterligas() {
             const q = query(listRef, orderBy('created', 'desc'), limit(1));
 
             const querySnapshot = await getDocs(q)
-            setChamados([]);
+            setMasterligas([]);
             await updateState(querySnapshot);
 
             setLoading(false);
         }
 
-        loadChamados();
+        loadmasterligas();
         return (() => { })
     }, []);
 
@@ -50,9 +50,10 @@ export default function Dashboard() {
             querySnapshot.forEach((doc) => {
                 lista.push({
                     id: doc.id,
-                    assunto: doc.data().assunto,
-                    cliente: doc.data().cliente,
-                    clienteID: doc.data().clienteID,
+                    ligas: doc.data().ligas,
+                    temp: doc.data().temp,
+                    time: doc.data().time,
+                    timeID: doc.data().timeID,
                     created: doc.data().created,
                     createdFormat: format(doc.data().created.toDate(), 'dd/MM/yyyy'),
                     complemento: doc.data().complemento,
@@ -62,7 +63,7 @@ export default function Dashboard() {
 
             const lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1]
 
-            setChamados(chamados => [...chamados, ...lista])
+            setMasterligas(masterligas => [...masterligas, ...lista])
             setLastDocs(lastDoc);
 
 
@@ -92,12 +93,12 @@ export default function Dashboard() {
             <div>
                 <Sidebar />
                 <div className="content">
-                    <Title name="Meus Times">
-                        <TbPlayFootball size={25} />
+                    <Title name="Minhas MasterLigas">
+                        <SiPremierleague size={25} />
                     </Title>
 
                     <div className="container dashboard">
-                        <span>Buscando chamados...</span>
+                        <span>Buscando times...</span>
                     </div>
                 </div>
             </div>
@@ -111,46 +112,48 @@ export default function Dashboard() {
         <>
             <Sidebar />
             <div className="content">
-                <Title name="Meus Times">
-                    <TbPlayFootball size={25} />
+                <Title name="Minhas MasterLigas">
+                    <SiPremierleague size={25} />
                 </Title>
                 <>
-                    {chamados.length === 0 ? (
+                    {masterligas.length === 0 ? (
                         <div className="container dashboard">
-                            <span>Nenhum chamado encontrado...</span>
+                            <span>Nenhum time encontrado...</span>
                             <Link to="/new" className="new">
                                 <FiPlus color="#FFF" size={25} />
-                                Novo Chamado
+                                Cadastrar Nova ML
                             </Link>
                         </div>
                     ) : (
                         <>
                             <Link to="/new" className="new">
                                 <FiPlus color="#FFF" size={25} />
-                                Novo Chamado
+                                Cadastrar Nova ML
                             </Link>
 
                             <table>
                                 <thead>
                                     <tr>
-                                        <th scope="col">Clientes</th>
-                                        <th scope="col">Assunto</th>
+                                        <th scope="col">Time</th>
+                                        <th scope="col">Liga</th>
                                         <th scope="col">Status</th>
+                                        <th scope="col">Temp. Atual</th>
                                         <th scope="col">Cadastrado em</th>
                                         <th scope="col">#</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {chamados.map((item, index) => {
+                                    {masterligas.map((item, index) => {
                                         return (
                                             <tr key={index}>
-                                                <td data-label="Cliente">{item.cliente}</td>
-                                                <td data-label="Assunto">{item.assunto}</td>
+                                                <td data-label="Cliente">{item.time}</td>
+                                                <td data-label="Assunto">{item.ligas}</td>
                                                 <td data-label="Status">
-                                                    <span className="badge" style={{ backgroundColor: item.status === 'Aberto' ? '#3583f6' : item.status === ' Em Progresso' ? '#f6a935' : item.status === 'Finalizado' ? '#5cb85c' : '#999' }}>
+                                                    <span className="badge" style={{ backgroundColor: item.status === 'Jogando' ? '#5cb85c' : item.status === ' Em Pausa' ? '#f6a935' : item.status === 'Finalizada' ? '#3583f6' : '#999' }}>
                                                         {item.status}
                                                     </span>
                                                 </td>
+                                                <td data-label="Temp Atual">{item.temp}</td>
                                                 <td data-label="Cadastrado">{item.createdFormat}</td>
                                                 <td data-label="#">
                                                     <button className="action" style={{ backgroundColor: '#3583f6' }} onClick={() => toggleModal(item)}>
@@ -170,7 +173,7 @@ export default function Dashboard() {
                                 </tbody>
                             </table>
 
-                            {loadingMore && <h3>Buscando mais chamados..</h3>}
+                            {loadingMore && <h3>Buscando mais masterligas..</h3>}
                             {!loadingMore && !isEmpty && <button className='btn-more' onClick={handleMore}>Buscar mais</button>}
                         </>
                     )}

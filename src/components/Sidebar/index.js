@@ -3,7 +3,9 @@ import { Link } from "react-router-dom"
 import avatarImg from '../../assets/avatar.png'
 import './index.css'
 import { AuthContext } from "../../contexts/auth";
-import { FiHome, FiSettings, FiUser } from 'react-icons/fi'
+import { SiPremierleague } from "react-icons/si";
+import { TbShieldCheckeredFilled } from "react-icons/tb";
+import { FaUserAlt } from "react-icons/fa";
 import { AiOutlinePoweroff } from "react-icons/ai";
 
 
@@ -23,15 +25,15 @@ export default function Sidebar() {
 
 
                 <Link to="/dashboard">
-                    <FiHome color="#FFF" size={24} />
-                    Chamados
+                    <SiPremierleague color="#FFF" size={24} />
+                    Minhas ML's
                 </Link>
-                <Link to="/customers">
-                    <FiUser color="#FFF" size={24} />
-                    Clientes
+                <Link to="/teams">
+                    <TbShieldCheckeredFilled color="#FFF" size={24} />
+                    Times
                 </Link>
                 <Link to="/profile">
-                    <FiSettings color="#FFF" size={24} />
+                    <FaUserAlt color="#FFF" size={24} />
                     Perfil
                 </Link>
 

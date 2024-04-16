@@ -9,7 +9,7 @@ import { collection, getDocs, getDoc, doc, addDoc, updateDoc } from 'firebase/fi
 import { toast } from 'react-toastify'
 import { useParams, useNavigate } from 'react-router-dom'
 
-const listRef = collection(db, "customers");
+const listRef = collection(db, "teams");
 
 export default function New() {
     const { user } = useContext(AuthContext)
@@ -18,19 +18,20 @@ export default function New() {
 
     const navigate = useNavigate();
 
-    const [customerSelected, setCustomerSelected] = useState(0);
+    const [teamSelected, setTeamSelected] = useState(0);
 
-    const [customers, setCustomers] = useState([])
-    const [loadCustomer, setLoadCustomer] = useState(true)
+    const [teams, setTeams] = useState([])
+    const [loadTeam, setLoadTeam] = useState(true)
 
     const [complemento, setComplemento] = useState('')
-    const [assunto, setAssunto] = useState('Suporte')
+    const [ligas, setLigas] = useState('')
+    const [temp, setTemp] = useState('')
     const [status, setStatus] = useState('Aberto')
     const [idCustomer, setIdCustomer] = useState(false)
 
     useEffect(() => {
 
-        async function loadCustomers() {
+        async function loadteams() {
             const querySnapshot = await getDocs(listRef)
                 .then((snapshot) => {
                     let lista = [];
@@ -38,19 +39,19 @@ export default function New() {
                     snapshot.forEach((doc) => {
                         lista.push({
                             id: doc.id,
-                            nomeFantasia: doc.data().nomeFantasia
+                            nomeTime: doc.data().nomeTime
                         })
                     })
 
                     if (snapshot.docs.size === 0) {
                         console.log("NENHUMA EMPRESA ENCONTRADA");
-                        setCustomers([{ id: '1', nomeFantasia: "FREELA" }])
-                        setLoadCustomer(false)
+                        setTeams([{ id: '1', nomeTime: "FREELA" }])
+                        setLoadTeam(false)
                         return;
                     }
 
-                    setCustomers(lista)
-                    setLoadCustomer(false)
+                    setTeams(lista)
+                    setLoadTeam(false)
 
 
 
@@ -61,26 +62,27 @@ export default function New() {
 
                 })
                 .catch((error) => {
-                    console.log("ERRO AO BUSCAR OS CLIENTES", error)
-                    setLoadCustomer(false)
-                    setCustomers([{ id: '1', nomeFantasia: "FREELA" }])
+                    console.log("ERRO AO BUSCAR OS TIMES", error)
+                    setLoadTeam(false)
+                    setTeams([{ id: '1', nomeTime: "FREELA" }])
 
                 })
         }
-        loadCustomers();
+        loadteams();
     }, [id])
 
 
     async function loadId(lista) {
-        const docRef = doc(db, 'chamados', id)
+        const docRef = doc(db, 'masterligas', id)
         await getDoc(docRef)
             .then((snapshot) => {
-                setAssunto(snapshot.data().assunto)
+                setLigas(snapshot.data().ligas)
+                setTemp(snapshot.data().temp)
                 setComplemento(snapshot.data().complemento)
                 setStatus(snapshot.data().status)
 
-                let index = lista.findIndex(item => item.id === snapshot.data().clienteID)
-                setCustomerSelected(index);
+                let index = lista.findIndex(item => item.id === snapshot.data().timeID)
+                setTeamSelected(index);
                 setIdCustomer(true)
             })
             .catch((error) => {
@@ -95,29 +97,34 @@ export default function New() {
     }
 
     function handleChangeSelect(e) {
-        setAssunto(e.target.value);
+        setLigas(e.target.value);
     }
 
     function handleChangeCustomer(e) {
-        setCustomerSelected(e.target.value)
+        setTeamSelected(e.target.value)
+    }
+
+    function handleChangeTemp(e) {
+        setTemp(e.target.value)
     }
 
     async function handleRegister(e) {
         e.preventDefault();
 
         if (idCustomer) {
-            const docRef = doc(db, 'chamados', id)
+            const docRef = doc(db, 'masterligas', id)
             await updateDoc(docRef, {
-                cliente: customers[customerSelected].nomeFantasia,
-                clienteID: customers[customerSelected].id,
-                assunto: assunto,
+                time: teams[teamSelected].nomeTime,
+                timeID: teams[teamSelected].id,
+                ligas: ligas,
+                temp: temp,
                 complemento: complemento,
                 status: status,
                 userID: user.uid,
             })
                 .then(() => {
                     toast.success('Atualizado com sucesso')
-                    setCustomerSelected(0)
+                    setTeamSelected(0)
                     setComplemento('')
                     navigate('/dashboard')
                 })
@@ -130,11 +137,12 @@ export default function New() {
             return;
         }
 
-        await addDoc(collection(db, "chamados"), {
+        await addDoc(collection(db, "masterligas"), {
             created: new Date(),
-            cliente: customers[customerSelected].nomeFantasia,
-            clienteID: customers[customerSelected].id,
-            assunto: assunto,
+            time: teams[teamSelected].nomeTime,
+            timeID: teams[teamSelected].id,
+            ligas: ligas,
+            temp: temp,
             complemento: complemento,
             status: status,
             userID: user.uid,
@@ -142,7 +150,7 @@ export default function New() {
             .then(() => {
                 toast.success("CHAMADO REGISTRADO COM SUCESSO")
                 setComplemento('')
-                setCustomerSelected(0)
+                setTeamSelected(0)
             })
             .catch((error) => {
                 toast.error("ERRO AO REGISTRAR, VERIFIQUE OS CAMPOS E TENTE NOVAMENTE!")
@@ -163,15 +171,15 @@ export default function New() {
 
                 <div className='container'>
                     <form className='form-profile' onSubmit={handleRegister}>
-                        <label>Cliente</label>
-                        {loadCustomer ? (
+                        <label>Time</label>
+                        {loadTeam ? (
                             <input type='text' disabled={true} value="Carregando..." />
                         ) : (
-                            <select value={customerSelected} onChange={handleChangeCustomer}>
-                                {customers.map((item, index) => {
+                            <select value={teamSelected} onChange={handleChangeCustomer}>
+                                {teams.map((item, index) => {
                                     return (
                                         <option key={index} value={index}>
-                                            {item.nomeFantasia}
+                                            {item.nomeTime}
                                         </option>
                                     )
                                 })}
@@ -179,41 +187,75 @@ export default function New() {
                         )
                         }
 
-                        <label>Assunto</label>
-                        <select value={assunto} onChange={handleChangeSelect}>
-                            <option value="Criação de Site">Criação de Site</option>
-                            <option value="Criação de Artes">Criação de Artes</option>
-                            <option value="Esboço Figma">Esboço Figma</option>
+                        <label>Liga</label>
+                        <select value={ligas} onChange={handleChangeSelect}>
+                            <option value="Liga Profesional de Fútbol">Liga Profesional de Fútbol</option>
+                            <option value="Jupiler Pro League">Jupiler Pro League</option>
+                            <option value="Brasileirão Série A">Brasileirão Série A</option>
+                            <option value="Brasileirão Série B">Brasileirão Série B</option>
+                            <option value="Campeonato AFP PlanVital">Campeonato AFP PlanVital</option>
+                            <option value="Liga BetPlay DIMAYOR">Liga BetPlay DIMAYOR</option>
+                            <option value="CFA Super League">CFA Super League</option>
+                            <option value="3F Superliga">3F Superliga</option>
+                            <option value="Scottish Premiership">Scottish Premiership</option>
+                            <option value="La Liga">La Liga</option>
+                            <option value="La Liga2">La Liga2</option>
+                            <option value="Ligue 1 Uber Eats">Ligue 1 Uber Eats</option>
+                            <option value="Ligue 2 BKT">Ligue 2 BKT</option>
+                            <option value="Premier League">Premier League</option>
+                            <option value="EFL Championship">EFL Championship</option>
+                            <option value="Serie A Tim">Serie A Tim</option>
+                            <option value="Serie BKT">Serie BKT</option>
+                            <option value="J-League">J-League</option>
+                            <option value="J2-League">J2-League</option>
+                            <option value="Eredivisie">Eredivisie</option>
+                            <option value="Liga NOS">Liga NOS</option>
+                            <option value="Russian Premier League">Russian Premier League</option>
+                            <option value="Raiffeisen Super League">Raiffeisen Super League</option>
+                            <option value="TOYOTA Thai League">TOYOTA Thai League</option>
+                            <option value="SporToto Super Lig">SporToto Super Lig</option>
+                            <option value="Outros Europa">Outros Europa</option>
+                            <option value="Outros Ásia">Outros Europa</option>
+                            <option value="Outros América Latina">Outros Europa</option>
                         </select>
+
+                        <label>Temporada Atual</label>
+                        <input
+                            type="text"
+                            placeholder='em qual temporada seu time está?'
+                            value={temp}
+                            onChange={handleChangeTemp}
+                        />
+
 
                         <label>Status</label>
                         <div className='status'>
                             <input
                                 type="radio"
                                 name='radio'
-                                value="Aberto"
+                                value="Jogando"
                                 onChange={handleOptionChange}
-                                checked={status === 'Aberto'}
+                                checked={status === 'Jogando'}
                             />
-                            <span>Aberto</span>
+                            <span>Jogando</span>
 
                             <input
                                 type="radio"
                                 name='radio'
-                                value=" Em Progresso"
+                                value="Em Pausa"
                                 onChange={handleOptionChange}
-                                checked={status === 'Em Progresso'}
+                                checked={status === 'Em Pausa'}
                             />
-                            <span> Em Progresso</span>
+                            <span>Em Pausa</span>
 
                             <input
                                 type="radio"
                                 name='radio'
-                                value="Finalizado"
+                                value="Finalizada"
                                 onChange={handleOptionChange}
-                                checked={status === 'Finalizado'}
+                                checked={status === 'Finalizada'}
                             />
-                            <span>Finalizado</span>
+                            <span>Finalizada</span>
 
                         </div>
 
