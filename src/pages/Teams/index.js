@@ -16,22 +16,22 @@ import { toast } from "react-toastify"
 export default function Teams() {
     const [time, setTime] = useState('')
     const [liga, setLiga] = useState('')
-    const [temporada, setTemporada] = useState('')
+    const [tecnico, setTecnico] = useState('')
 
 
     async function handleRegister(e) {
         e.preventDefault();
 
-        if (time !== '' && liga !== '' && temporada !== '') {
+        if (time !== '' && liga !== '' && tecnico !== '') {
             await addDoc(collection(db, "teams"), {
                 nomeTime: time,
                 liga: liga,
-                temporada: temporada
+                tecnico: tecnico
             })
                 .then(() => {
                     setTime('')
                     setLiga('')
-                    setTemporada('')
+                    setTecnico('')
                     toast.success("Cadastrado com sucesso")
                 })
                 .catch((error) => {
@@ -72,12 +72,12 @@ export default function Teams() {
                             onChange={(e) => setLiga(e.target.value)}
                         />
 
-                        <label>Qual a temporada está jogando?</label>
+                        <label>Qual o nome do técnico?</label>
                         <input
                             type="text"
-                            placeholder="insira a temporada atual"
-                            value={temporada}
-                            onChange={(e) => setTemporada(e.target.value)}
+                            placeholder="insira o técnico atual"
+                            value={tecnico}
+                            onChange={(e) => setTecnico(e.target.value)}
                         />
 
                         <button type="submit">Salvar</button>
