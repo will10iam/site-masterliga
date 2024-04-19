@@ -11,17 +11,11 @@ export default function Modal({ conteudo, close }) {
                 </button>
 
                 <main>
-                    <h2>Detalhes do Chamado</h2>
+                    <h2>Detalhes do Time</h2>
 
                     <div className='row'>
                         <span>
-                            Cliente: <i>{conteudo.cliente}</i>
-                        </span>
-                    </div>
-
-                    <div className='row'>
-                        <span>
-                            Assunto: <i>{conteudo.assunto}</i>
+                            Time: <i>{conteudo.time}</i>
                         </span>
 
                         <span>
@@ -30,11 +24,36 @@ export default function Modal({ conteudo, close }) {
                     </div>
 
                     <div className='row'>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Jogador</th>
+                                    <th scope="col">Posição</th>
+                                    <th scope="col">Gols</th>
+                                    <th scope="col">Assist.</th>
+                                    <th scope="col">Nota</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+                                    <td data-label="Jogador"></td>
+                                    <td data-label="Posicao"></td>
+                                    <td data-label="Gols"></td>
+                                    <td data-label="Assistencias"></td>
+                                    <td data-label="Nota"></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div className='row'>
                         <span >
                             Status:
                             <i
                                 className='status-badge'
-                                style={{ color: '#FFF', backgroundColor: conteudo.status === 'Aberto' ? '#3583f6' : conteudo.status === ' Em Progresso' ? '#f6a935' : conteudo.status === 'Finalizado' ? '#5cb85c' : '#999' }}>
+                                style={{ color: '#FFF', backgroundColor: conteudo.status === 'Jogando' ? '#5cb85c' : conteudo.status === ' Em Pausa' ? '#f6a935' : conteudo.status === 'Finalizada' ? '#3583f6' : '#999' }}>
                                 {conteudo.status}
                             </i>
                         </span>

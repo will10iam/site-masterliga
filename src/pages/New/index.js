@@ -22,8 +22,6 @@ export default function New() {
 
     const [teams, setTeams] = useState([])
     const [loadTeam, setLoadTeam] = useState(true)
-
-    const [complemento, setComplemento] = useState('')
     const [ligas, setLigas] = useState('')
     const [temp, setTemp] = useState('')
     const [status, setStatus] = useState('Aberto')
@@ -78,7 +76,6 @@ export default function New() {
             .then((snapshot) => {
                 setLigas(snapshot.data().ligas)
                 setTemp(snapshot.data().temp)
-                setComplemento(snapshot.data().complemento)
                 setStatus(snapshot.data().status)
 
                 let index = lista.findIndex(item => item.id === snapshot.data().timeID)
@@ -118,14 +115,12 @@ export default function New() {
                 timeID: teams[teamSelected].id,
                 ligas: ligas,
                 temp: temp,
-                complemento: complemento,
                 status: status,
                 userID: user.uid,
             })
                 .then(() => {
                     toast.success('Atualizado com sucesso')
                     setTeamSelected(0)
-                    setComplemento('')
                     navigate('/dashboard')
                 })
                 .catch((error) => {
@@ -143,13 +138,11 @@ export default function New() {
             timeID: teams[teamSelected].id,
             ligas: ligas,
             temp: temp,
-            complemento: complemento,
             status: status,
             userID: user.uid,
         })
             .then(() => {
                 toast.success("CHAMADO REGISTRADO COM SUCESSO")
-                setComplemento('')
                 setTeamSelected(0)
             })
             .catch((error) => {
@@ -259,15 +252,8 @@ export default function New() {
 
                         </div>
 
-                        <label>Complemento</label>
-                        <textarea
-                            type="text"
-                            placeholder='Descreva seu problema.'
-                            value={complemento}
-                            onChange={(e) => setComplemento(e.target.value)}
-                        />
 
-                        <button type="submit">Registrar</button>
+                        <button type="submit">Registrar ML</button>
                     </form>
                 </div>
             </div>
