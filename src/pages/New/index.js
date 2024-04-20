@@ -297,6 +297,7 @@ export default function New() {
     useEffect(() => {
         // Carregar times existentes ao iniciar a página
         async function loadteams() {
+            // eslint-disable-next-line no-unused-vars
             const querySnapshot = await getDocs(listRef)
                 .then((snapshot) => {
                     let lista = [];
