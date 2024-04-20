@@ -19,3 +19,10 @@ form input[type="radio"]:not(:first-child) {
 .status {
     margin-bottom: 1em;
 }
+
+.button {
+    width: 150px;
+    margin-bottom: 10px;
+    font-size: 1em;
+    background-color: forestgreen;
+}

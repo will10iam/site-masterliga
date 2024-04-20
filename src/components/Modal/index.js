@@ -2,6 +2,8 @@ import { FiX } from 'react-icons/fi'
 import './index.css'
 
 export default function Modal({ conteudo, close }) {
+
+    console.log(conteudo.id)
     return (
         <div className='modal'>
             <div className='container'>
@@ -11,11 +13,15 @@ export default function Modal({ conteudo, close }) {
                 </button>
 
                 <main>
-                    <h2>Detalhes do Time</h2>
+                    <h2>Detalhes da ML</h2>
 
                     <div className='row'>
                         <span>
                             Time: <i>{conteudo.time}</i>
+                        </span>
+
+                        <span>
+                            Temp: <i>{conteudo.temp}</i>
                         </span>
 
                         <span>
@@ -35,21 +41,24 @@ export default function Modal({ conteudo, close }) {
                                 </tr>
                             </thead>
                             <tbody>
+                                {conteudo.jogadores.map((jogador, index) => (
 
-                                <tr>
-                                    <td data-label="Jogador"></td>
-                                    <td data-label="Posicao"></td>
-                                    <td data-label="Gols"></td>
-                                    <td data-label="Assistencias"></td>
-                                    <td data-label="Nota"></td>
-                                </tr>
+                                    <tr key={index}>
+                                        <td data-label="Jogador">{jogador.nome}</td>
+                                        <td data-label="Jogador">{jogador.posicao}</td>
+                                        <td data-label="Jogador">{jogador.gols}</td>
+                                        <td data-label="Jogador">{jogador.assistencias}</td>
+                                        <td data-label="Jogador">{jogador.nota}</td>
+                                    </tr>
+                                ))}
+
 
                             </tbody>
                         </table>
                     </div>
 
                     <div className='row'>
-                        <span >
+                        <span className='status'>
                             Status:
                             <i
                                 className='status-badge'
@@ -60,7 +69,7 @@ export default function Modal({ conteudo, close }) {
                     </div>
 
 
-                    {conteudo.complemento !== '' && (
+                    {/* {conteudo.complemento !== '' && (
                         <>
                             <h3>Complemento</h3>
                             <p>
@@ -69,7 +78,7 @@ export default function Modal({ conteudo, close }) {
 
                         </>
 
-                    )}
+                    )} */}
 
                 </main>
             </div>
@@ -77,3 +86,4 @@ export default function Modal({ conteudo, close }) {
         </div>
     )
 }
+
