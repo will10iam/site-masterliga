@@ -330,6 +330,7 @@ export default function New() {
                 })
         }
         loadteams();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id])
 
     async function loadId(lista) {
