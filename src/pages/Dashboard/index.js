@@ -57,6 +57,7 @@ export default function Dashboard() {
                     createdFormat: format(doc.data().created.toDate(), 'dd/MM/yyyy'),
                     complemento: doc.data().complemento,
                     status: doc.data().status,
+                    jogadores: doc.data().jogadores,
                 })
             })
 
