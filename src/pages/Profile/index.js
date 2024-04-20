@@ -15,7 +15,7 @@ export default function Profile() {
     const { user, storageUser, setUser } = useContext(AuthContext);
     const [avatarUrl, setAvatarUrl] = useState(user && user.avatarUrl)
     const [nome, setNome] = useState(user && user.nome)
-    const [email, setEmail] = useState(user && user.email)
+    const [email] = useState(user && user.email)
     const [imageAvatar, setImageAvatar] = useState(null)
 
     function handleFile(e) {
@@ -38,6 +38,7 @@ export default function Profile() {
         const currentUid = user.uid;
 
         const uploadRef = ref(storage, `images/${currentUid}/${imageAvatar.name}`)
+        // eslint-disable-next-line no-unused-vars
         const uploadTask = uploadBytes(uploadRef, imageAvatar)
             .then((snapshot) => {
                 getDownloadURL(snapshot.ref).then(async (downloadURL) => {
