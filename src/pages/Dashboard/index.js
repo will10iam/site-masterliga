@@ -58,6 +58,7 @@ export default function Dashboard() {
                     complemento: doc.data().complemento,
                     status: doc.data().status,
                     jogadores: doc.data().jogadores,
+                    troféu: doc.data().troféu,
                 })
             })
 

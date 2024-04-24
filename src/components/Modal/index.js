@@ -13,19 +13,19 @@ export default function Modal({ conteudo, close }) {
                 </button>
 
                 <main>
-                    <h2>Detalhes da ML</h2>
+                    <h2>Detalhes da MasterLiga</h2>
 
                     <div className='row'>
                         <span>
                             Time: <i>{conteudo.time}</i>
                         </span>
 
-                        <span>
-                            Temp: <i>{conteudo.temp}</i>
+                        <span className='span2'>
+                            Temporada: <i>{conteudo.temp}</i>
                         </span>
 
                         <span>
-                            Cadastrado em: <i>{conteudo.createdFormat}</i>
+                            Início: <i>{conteudo.createdFormat}</i>
                         </span>
                     </div>
 
@@ -45,10 +45,10 @@ export default function Modal({ conteudo, close }) {
 
                                     <tr key={index}>
                                         <td data-label="Jogador">{jogador.nome}</td>
-                                        <td data-label="Jogador">{jogador.posicao}</td>
-                                        <td data-label="Jogador">{jogador.gols}</td>
-                                        <td data-label="Jogador">{jogador.assistencias}</td>
-                                        <td data-label="Jogador">{jogador.nota}</td>
+                                        <td data-label="Posição">{jogador.posicao}</td>
+                                        <td data-label="Gols">{jogador.gols}</td>
+                                        <td data-label="Assistências">{jogador.assistencias}</td>
+                                        <td data-label="Nota">{jogador.nota}</td>
                                     </tr>
                                 ))}
 
@@ -65,6 +65,10 @@ export default function Modal({ conteudo, close }) {
                                 style={{ color: '#FFF', backgroundColor: conteudo.status === 'Jogando' ? '#5cb85c' : conteudo.status === ' Em Pausa' ? '#f6a935' : conteudo.status === 'Finalizada' ? '#3583f6' : '#999' }}>
                                 {conteudo.status}
                             </i>
+                        </span>
+
+                        <span>
+                            Títulos: {conteudo.troféu}
                         </span>
                     </div>
 

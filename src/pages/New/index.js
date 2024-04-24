@@ -288,6 +288,7 @@ export default function New() {
     const [loadTeam, setLoadTeam] = useState(true)
     const [ligas, setLigas] = useState('')
     const [temp, setTemp] = useState('')
+    const [trofeu, setTrofeu] = useState('')
     const [status, setStatus] = useState('Aberto')
     const [idCustomer, setIdCustomer] = useState(false)
 
@@ -340,6 +341,7 @@ export default function New() {
                 setLigas(snapshot.data().ligas)
                 setTemp(snapshot.data().temp)
                 setStatus(snapshot.data().status)
+                setTrofeu(snapshot.data().troféu)
 
                 let index = lista.findIndex(item => item.id === snapshot.data().timeID)
                 setTeamSelected(index);
@@ -369,6 +371,10 @@ export default function New() {
         setTemp(e.target.value)
     }
 
+    function handleChangeTrofeu(e) {
+        setTrofeu(e.target.value)
+    }
+
     async function handleRegister(e) {
         e.preventDefault();
 
@@ -380,6 +386,7 @@ export default function New() {
                 ligas: ligas,
                 temp: temp,
                 status: status,
+                troféu: trofeu,
                 userID: user.uid,
                 jogadores: jogadores,
             })
@@ -403,6 +410,7 @@ export default function New() {
             ligas: ligas,
             temp: temp,
             status: status,
+            troféu: trofeu,
             userID: user.uid,
             jogadores: jogadores // Adicionando informações dos jogadores
         })
@@ -581,6 +589,15 @@ export default function New() {
 
                         {/* Botão para adicionar novo jogador */}
                         <button type="button" onClick={adicionarJogador} className='button'>Adicionar Jogador</button>
+
+
+                        <label>Quais títulos ganhou?!</label>
+                        <input
+                            type="text"
+                            placeholder='insira o nome da competição'
+                            value={trofeu}
+                            onChange={handleChangeTrofeu}
+                        />
 
                         <button type="submit">Registrar MasterLiga</button>
                     </form>
